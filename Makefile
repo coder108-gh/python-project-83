@@ -18,3 +18,4 @@ test-coverage:
 
 test-coverage-cons:
 	uv run pytest --cov=page_analyzer
+
