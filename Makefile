@@ -7,6 +7,10 @@ render-start:
 
 install:
 	uv sync
+
+build:
+	./build.sh
+
 dev:
 	uv run flask --debug --app page_analyzer\:app run
 
