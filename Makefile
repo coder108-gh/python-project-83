@@ -3,8 +3,7 @@ start:
 	uv run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 render-start:
-	export PATH=$PATH:/usr/local/python3/bin
-	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
+	/usr/local/python3/bingunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 install:
 	uv sync
