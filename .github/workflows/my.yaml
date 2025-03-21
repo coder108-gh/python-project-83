@@ -31,9 +31,9 @@ jobs:
 
       - name: lint
         run: |
-          make lint
+          make check
         
       - name: tests
         run: |
-            make check
+            make test
 
