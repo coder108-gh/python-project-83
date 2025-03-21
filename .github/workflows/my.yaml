@@ -1,0 +1,39 @@
+name: dev CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: python ver
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      
+      - name: install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: install dep
+        run: |
+          make install
+
+      - name: lint
+        run: |
+          make lint
+        
+      - name: tests
+        run: |
+            make check
+

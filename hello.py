@@ -1,9 +1,12 @@
+from dotenv import load_dotenv
+import os
+
+
 def main():
     print("Hello from python-project-83!")
-
-
-def n1():
-    print('n1!')
+    load_dotenv()
+    print(os.getenv('DOMAIN'))
+    print(os.getenv('ROOT_URL'))
 
 
 if __name__ == "__main__":
