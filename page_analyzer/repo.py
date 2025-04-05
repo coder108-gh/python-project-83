@@ -3,13 +3,15 @@ from functools import wraps
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
 
-INCORRECT_DECORATOR_USE = -101
-NO_DATABASE_CONNECTION = -1
-NEW_CONNECTION = 1
-OLD_CONNECTION = 0
-OK = 1
-URL_EXISTS = -2
-DATA_NOT_FOUND = -404
+from .const import (
+    DATA_NOT_FOUND,
+    INCORRECT_DECORATOR_USE,
+    NEW_CONNECTION,
+    NO_DATABASE_CONNECTION,
+    OK,
+    OLD_CONNECTION,
+    URL_EXISTS,
+)
 
 
 def db_operation(need_commit: bool):
@@ -21,21 +23,16 @@ def db_operation(need_commit: bool):
             if not isinstance(self, Repo):
                 return {
                     'state': INCORRECT_DECORATOR_USE,
-                    'descr': 'incorrect use of db_operation decorator: \
-                        first param - self'
-                }
-            if not isinstance(self, Repo):
-                return {
-                    'state': INCORRECT_DECORATOR_USE,
-                    'descr': 'incorrect use of db_operation decorator: \
-                        first param - self'
+                    'descr': 'Некорректный программный код',
+                    'dev': 'при использовании декоратора db_operation, \
+                        в функции первый параметр - объект класса Repo'
                 }
 
             conn_state = self.db_connect()
             if conn_state == NO_DATABASE_CONNECTION:
                 return {
                     'state': NO_DATABASE_CONNECTION,
-                    'descr': 'no database connection'
+                    'descr': 'Невозможно подключиться к СУБД'
                 }
             with self.db_conn.cursor(cursor_factory=NamedTupleCursor) as cur:
                 result = func(cursor=cur, *args, **kwargs)
@@ -111,13 +108,13 @@ class Repo:
 
             result = {
                 'state': OK,
-                'descr': 'ok',
+                'descr': 'Страница успешно добавлена',
                 'id': rec.id
             }
         else:
             result = {
                 'state': URL_EXISTS,
-                'descr': 'url allready exists'
+                'descr': 'Страница уже существует'
             }
 
         return result
@@ -137,7 +134,28 @@ class Repo:
         else:
             result = {
                 'state': DATA_NOT_FOUND,
-                'descr': 'url not found'
+                'descr': 'Данные не найдены'
+            }
+
+        return result
+
+    @db_operation(False)
+    def get_urls(self, cursor=None):
+
+        SQL_STR = 'SELECT id, name, created_at FROM urls \
+            ORDER BY created_at DESC'
+        cursor.execute(SQL_STR, (id,))
+        records = cursor.fetchall()
+        if records is not None:
+            result = {
+                'state': OK,
+                'descr': 'ok',
+                'data': records
+            }
+        else:
+            result = {
+                'state': DATA_NOT_FOUND,
+                'descr': 'Данные не найдены'
             }
 
         return result
