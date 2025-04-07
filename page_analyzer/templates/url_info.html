@@ -24,7 +24,7 @@
                 </div>
 {% endif %}
                 <h2 class="mt-5 mb-3">Проверки</h2>
-                <form method="post" action="/urls/1/checks">
+                <form method="post" action="/urls/{{data.id}}/checks">
                     <input type="submit" class="btn btn-primary" value="Запустить проверку">
                 </form>
 
@@ -44,12 +44,12 @@
                         <tbody>
 {% for test in tests %}
                             <tr>
-                                <td>{{test.ord_num}}</td>
+                                <td>{{test.id}}</td>
                                 <td>{{test.status_code}}</td>
-                                <td>{{test.h1_text}}</td>
+                                <td>{{test.h1}}</td>
                                 <td>{{test.title}}</td>
                                 <td>{{test.decription}}</td>
-                                <td>{{test.test_date}}</td>
+                                <td>{{test.created_at.date()}}</td>
                             </tr>
 {% endfor %}
                         </tbody>
