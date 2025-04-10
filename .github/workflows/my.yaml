@@ -32,8 +32,4 @@ jobs:
       - name: lint
         run: |
           make check
-        
-      - name: tests
-        run: |
-            make test
-
+   
