@@ -59,6 +59,7 @@ def url_info(id: int):
 def add_new_url():
     data = request.form.to_dict()
     url = normalize_url(data["url"])
+    is_add_error = False
     if validate_url(url):
         repo = Repo(DATABASE_URL)
         result = repo.add_new_url(url)
@@ -66,16 +67,20 @@ def add_new_url():
         if result.is_ok:
             flash(FlashMsg.URL_ADDED, FlashCtg.SUCCESS)
             return redirect(url_for("url_info", id=result.value), code=302)
-        else:
-            process_error(result)
+        elif result.error_code == Errors.URL_EXISTS:
+            flash(FlashMsg.URL_EXISTS, FlashCtg.ERROR)
+            is_add_error = True
     else:
         flash(FlashMsg.INVALID_URL, FlashCtg.ERROR)
+        is_add_error = True
 
-    return render_template(
-        "index.html",
-        url_value=data["url"],
-    ), HTTPCodes.UNPROCESSABLE_ENTITY
-
+    if is_add_error:
+        return render_template(
+            "index.html",
+            url_value=data["url"],
+        ), HTTPCodes.UNPROCESSABLE_ENTITY
+    else:
+        process_error(result)
 
 @app.get("/urls")
 def url_list():
