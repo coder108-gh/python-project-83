@@ -82,6 +82,7 @@ def add_new_url():
     else:
         process_error(result)
 
+
 @app.get("/urls")
 def url_list():
     repo = Repo(DATABASE_URL)
@@ -101,8 +102,11 @@ def make_url_check(id: int):
     elif not result_url.is_ok:
         process_error(result_url)
 
-    check_data = get_check_data(result_url.value.name)
- 
+    try:
+        check_data = get_check_data(result_url.value.name)
+
+    except Exception:
+        process_error(Result(False, Errors.RUNTIME_ERROR))
     result = repo.add_url_check(check_data, id)
 
     if result.is_ok:
