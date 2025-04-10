@@ -34,5 +34,6 @@ def get_check_data(url):
     except Exception as e:
         raise e
 
-    return {'code': code, 'h1': '', 'title': '', 'descr': ''} | process_html(r.text)
+    return {'code': code, 'h1': '', 'title': '', 'descr': ''} | \
+        process_html(r.text)
 

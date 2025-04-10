@@ -16,13 +16,3 @@ dev:
 
 check:
 	uv run ruff check .
-
-test:
-	uv run pytest
-
-test-coverage:
-	uv run pytest --cov=page_analyzer --cov-report xml
-
-test-coverage-cons:
-	uv run pytest --cov=page_analyzer
-
